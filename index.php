@@ -8,7 +8,7 @@
 <body>
 	<table>
 		<caption> Personnages d'Astérix</caption>
-	</table>
+
 
 <?php
 try {
@@ -23,18 +23,29 @@ $mysqlClient = new PDO(
 // Si tout va bien, on peut continuer
 
 // On récupère tout le contenu de la table personnage
-$sqlQuery = 'SELECT * FROM personnage';
-$personnagesStatement = $mysqlClient->prepare($sqlQuery);
+$sqlQueryPersonnages = '
+	SELECT p.nom_personnage
+	FROM personnage p
+	';
+$personnagesStatement = $mysqlClient->prepare($sqlQueryPersonnages);
 $personnagesStatement->execute();
 $personnages = $personnagesStatement->fetchAll();
-// On récupère tout le contenu de la table spécialité
-$sqlQuery = 'SELECT * FROM specialite';
-$specialitesStatement = $mysqlClient->prepare($sqlQuery);
+
+$sqlQuerySpecialites = '
+	SELECT l.nom_lieux
+	FROM lieu l
+	INNER JOIN personnage p ON p.id_lieu = l.id_lieu
+	';
+$specialitesStatement = $mysqlClient->prepare($sqlQuerySpecialites);
 $specialitesStatement->execute();
 $specialites = $specialitesStatement->fetchAll();
-// On récupère tout le contenu de la table lieu
-$sqlQuery = 'SELECT * FROM lieu';
-$lieuxStatement = $mysqlClient->prepare($sqlQuery);
+
+$sqlQueryLieux = '
+	SELECT s.nom_specialite
+	FROM specialite s
+	INNER JOIN personnage p ON p.id_specialite = l.id_specialite
+	';
+$lieuxStatement = $mysqlClient->prepare($sqlQueryLieux);
 $lieuxStatement->execute();
 $lieux = $lieuxStatement->fetchAll();
 ?>
@@ -46,11 +57,14 @@ $lieux = $lieuxStatement->fetchAll();
 
 <!-- On affiche chaque personnage un par un -->
 <?php
-foreach ($personnages as $personnage) {
-?>
-    <p><?php echo $personnage['nom_personnage']; ?></p>
-<?php
+foreach ($personnages as $personnage, $secialites as $specialite, $lieux as $lieu) {
+	echo '<tr><td>'.$personnage['nom_personnage'].'</tr></td>';
+	echo '<tr><td>'.$personnage['nom_personnage'].'</tr></td>';
+	echo '<tr><td>'.$personnage['nom_personnage'].'</tr></td>';
 }
+ ?>
+	</table>
+<?php
 ?>
 </body>
 </html>
