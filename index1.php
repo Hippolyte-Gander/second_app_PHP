@@ -42,24 +42,17 @@ $personnages = $personnagesStatement->fetchAll();
 		</thead>
 		<tbody>
 <!-- On affiche chaque personnage un par un -->
-<?php
-foreach ($personnages as $personnage) {
-	echo '<tr>';
-	echo '<td>'.htmlspecialchars($personnage['nom_personnage']).'</td>';
-	echo '<td>'.htmlspecialchars($personnage['nom_specialite']).'</td>';
-	echo '<td>'.htmlspecialchars($personnage['nom_lieu']).'</td>';
-	echo '</tr>';
-};
-?>
-</tbody>
+			<?php
+			foreach ($personnages as $personnage) {
+				echo '<tr>';
+				echo '<td>'.htmlspecialchars($personnage['nom_personnage']).'</td>';
+				echo '<td>'.htmlspecialchars($personnage['nom_specialite']).'</td>';
+				echo '<td>'.htmlspecialchars($personnage['nom_lieu']).'</td>';
+				echo '</tr>';
+			};
+			?>
+		</tbody>
     </table>
-
 
 </body>
 </html>
-
-
-
-
-
-
