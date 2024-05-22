@@ -6,9 +6,6 @@
 	<title>Personnages Gaulois</title>
 </head>
 <body>
-	<table>
-		<caption> Personnages d'Astérix</caption>
-
 
 <?php
 try {
@@ -23,60 +20,41 @@ $mysqlClient = new PDO(
 // Si tout va bien, on peut continuer
 
 // On récupère tout le contenu de la table personnage
-$sqlQueryPersonnages = '
-	SELECT p.nom_personnage
+$sqlQuery = '
+	SELECT p.nom_personnage, s.nom_specialite, l.nom_lieu
 	FROM personnage p
+	INNER JOIN specialite s ON s.id_specialite = p.id_specialite
+	INNER JOIN lieu l ON l.id_lieu = p.id_lieu
+	ORDER BY p.nom_personnage
 	';
-$personnagesStatement = $mysqlClient->prepare($sqlQueryPersonnages);
+$personnagesStatement = $mysqlClient->prepare($sqlQuery);
 $personnagesStatement->execute();
 $personnages = $personnagesStatement->fetchAll();
 
-$sqlQuerySpecialites = '
-	SELECT l.nom_lieu
-	FROM lieu l
-	INNER JOIN personnage p ON p.id_lieu = l.id_lieu
-	';
-$specialitesStatement = $mysqlClient->prepare($sqlQuerySpecialites);
-$specialitesStatement->execute();
-$specialites = $specialitesStatement->fetchAll();
-
-$sqlQueryLieux = '
-	SELECT s.nom_specialite
-	FROM specialite s
-	INNER JOIN personnage p ON p.id_specialite = s.id_specialite
-	';
-$lieuxStatement = $mysqlClient->prepare($sqlQueryLieux);
-$lieuxStatement->execute();
-$lieux = $lieuxStatement->fetchAll();
 ?>
-	<tr>
-		<th>Personnage</th>
-		<th>Spécialité</th>
-		<th>Lieu</th>
-	</tr>
-
+	<table>
+		<thead>
+			<tr>
+				<th>Nom du Personnage</th>
+				<th>Spécialité</th>
+				<th>Lieu</th>
+			</tr>
+		</thead>
+		<tbody>
 <!-- On affiche chaque personnage un par un -->
 <?php
-echo '<tr>';
 foreach ($personnages as $personnage) {
-	echo '<td>'.$personnage['nom_personnage'].'</tr></td>';
+	echo '<tr>';
+	echo '<td>'.htmlspecialchars($personnage['nom_personnage']).'</td>';
+	echo '<td>'.htmlspecialchars($personnage['nom_specialite']).'</td>';
+	echo '<td>'.htmlspecialchars($personnage['nom_lieu']).'</td>';
+	echo '</tr>';
 };
-echo '</tr>';
-echo '<tr>';
-foreach ($specialites as $specialite) {
-	echo '<td>'.$specialite['nom_specialite'].'</tr></td>';
-};
-echo '</tr>';
-echo '<tr>';
-foreach ($lieux as $lieu) {
-	echo '<td>'.$lieu['nom_lieu'].'</tr></td>';
-};
-echo '</tr>';
-
- ?>
-	</table>
-<?php
 ?>
+</tbody>
+    </table>
+
+
 </body>
 </html>
 
